@@ -5,7 +5,6 @@ const { onBeforeUnmount } = require("vue");
  */
 let useKeyDown = combinacao => {
   let onKeyDown = event => {
-    console.log(event.key, combinacao);
     let kc = combinacao.find(kc => kc.tecla == event.key);
     if (kc) kc.fn();
   };
