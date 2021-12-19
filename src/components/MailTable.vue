@@ -25,7 +25,9 @@
       </tr>
     </tbody>
   </table>
-  <MailView v-if="emailAberto" :email="emailAberto" />
+  <ModalView v-if="emailAberto" @closeModal="emailAberto = null">
+    <MailView :email="emailAberto" />
+  </ModalView>
 </template>
 <script>
 import { format } from "date-fns";
@@ -33,11 +35,13 @@ import { ptBR } from "date-fns/locale";
 import { ref } from "vue";
 import axios from "axios";
 import MailView from "@/components/MailView";
+import ModalView from "@/components/ModalView";
 
 export default {
   name: "MailTable",
   components: {
-    MailView
+    MailView,
+    ModalView
   },
   async setup() {
     // let { data: emails } = await axios.get("http://localhost:3000/emails");
