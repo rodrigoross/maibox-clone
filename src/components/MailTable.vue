@@ -1,9 +1,15 @@
 <template>
-  <BulkActionBar :emails="emailsNaoArquivados" />
+  <button @click="selecionaTela('inbox')" :disabled="telaSelecionada === 'inbox'">
+    Caixa de Entrda
+  </button>
+  <button @click="selecionaTela('archives')" :disabled="telaSelecionada === 'archives'">
+    Arquivados
+  </button>
+  <BulkActionBar :emails="emailsFiltrados" />
   <table class="mail-table">
     <tbody>
       <tr
-        v-for="email in emailsNaoArquivados"
+        v-for="email in emailsFiltrados"
         :key="email.id"
         :class="['clickable', email.read ? 'read' : '']"
       >
@@ -61,7 +67,8 @@ export default {
       },
       emails: ref(emails),
       emailAberto: ref(null),
-      selecaoDeEmails: useSelecaoDeEmails()
+      selecaoDeEmails: useSelecaoDeEmails(),
+      telaSelecionada: ref("inbox")
     };
   },
   computed: {
@@ -70,11 +77,20 @@ export default {
         return e1.sentAt < e2.sentAt ? 1 : -1;
       });
     },
-    emailsNaoArquivados() {
-      return this.emailsOrdenados.filter(e => !e.archived);
+    emailsFiltrados() {
+      if (this.telaSelecionada === "inbox") {
+        return this.emailsOrdenados.filter(e => !e.archived);
+      }
+
+      return this.emailsOrdenados.filter(e => e.archived);
     }
   },
   methods: {
+    selecionaTela(novaTela) {
+      this.telaSelecionada = novaTela;
+
+      this.selecaoDeEmails.limpa();
+    },
     abrirEmail(email) {
       this.emailAberto = email;
 
@@ -97,7 +113,7 @@ export default {
       if (fecharModal) this.emailAberto = null;
 
       if (mudarIndex) {
-        let emails = this.emailsNaoArquivados;
+        let emails = this.emailsFiltrados;
         let indexAtual = emails.indexOf(this.emailAberto);
         let novoEmail = emails[indexAtual + mudarIndex];
         this.abrirEmail(novoEmail);

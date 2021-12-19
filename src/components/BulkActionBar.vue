@@ -40,11 +40,11 @@ export default {
   setup(props) {
     const emailsSelecionados = useSelecaoDeEmails();
     const numSelecionados = computed(() => emailsSelecionados.emails.size);
-    const totalEmails = props.emails.length;
+    const totalEmails = computed(() => props.emails.length);
 
-    const todosEmailsSelecionados = computed(() => numSelecionados.value === totalEmails);
+    const todosEmailsSelecionados = computed(() => numSelecionados.value === totalEmails.value);
     const algunsEmailsSelecionados = computed(() => {
-      return numSelecionados.value > 0 && numSelecionados.value < totalEmails;
+      return numSelecionados.value > 0 && numSelecionados.value < totalEmails.value;
     });
 
     const selecionarTodos = function() {
