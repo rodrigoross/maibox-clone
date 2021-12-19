@@ -40,6 +40,7 @@ import { reactive, ref } from "vue";
 import axios from "axios";
 import MailView from "@/components/MailView";
 import ModalView from "@/components/ModalView";
+import useSelecaoDeEmails from '@/composables/use-selecao-emails'
 
 export default {
   name: "MailTable",
@@ -53,20 +54,6 @@ export default {
     let response = await axios.get("http://localhost:3000/emails");
     const emails = ref(response.data);
 
-    const selecionados = reactive(new Set());
-
-    const selecaoDeEmails = {
-      emails: selecionados,
-      troca(email) {
-        if (selecionados.has(email)) {
-          selecionados.delete(email);
-        } else {
-          selecionados.add(email);
-        }
-        console.log(selecionados);
-      }
-    };
-
     return {
       format,
       localeOptions: {
@@ -74,7 +61,7 @@ export default {
       },
       emails,
       emailAberto: ref(null),
-      selecaoDeEmails
+      selecaoDeEmails: useSelecaoDeEmails()
     };
   },
   computed: {
