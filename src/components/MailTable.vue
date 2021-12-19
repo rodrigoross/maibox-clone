@@ -5,7 +5,7 @@
         v-for="email in emailsNaoArquivados"
         :key="email.id"
         :class="['clickable', email.read ? 'read' : '']"
-        @click="lerEmail(email)"
+        @click="abrirEmail(email)"
       >
         <td>
           <input type="checkbox" name="read" id="read" />
@@ -17,7 +17,7 @@
           </p>
         </td>
         <td class="date">
-          {{ format(new Date(email.sentAt), "d, MMM yyyy") }}
+          {{ format(new Date(email.sentAt), "d 'de' MMMM", localeOptions) }}
         </td>
         <td>
           <button @click="arquivarEmail(email)">Arquivar</button>
@@ -25,14 +25,20 @@
       </tr>
     </tbody>
   </table>
+  <MailView v-if="emailAberto" :email="emailAberto" />
 </template>
 <script>
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { ref } from "vue";
 import axios from "axios";
+import MailView from "@/components/MailView";
 
 export default {
   name: "MailTable",
+  components: {
+    MailView
+  },
   async setup() {
     // let { data: emails } = await axios.get("http://localhost:3000/emails");
     // let emails = response.data; // reduzindo com es6 fica { data: emails}
@@ -41,7 +47,11 @@ export default {
 
     return {
       format,
-      emails
+      localeOptions: {
+        locale: ptBR
+      },
+      emails,
+      emailAberto: ref(null)
     };
   },
   computed: {
@@ -55,9 +65,10 @@ export default {
     }
   },
   methods: {
-    lerEmail(email) {
+    abrirEmail(email) {
       email.read = true;
       this.atualizarEmail(email);
+      this.emailAberto = email;
     },
     arquivarEmail(email) {
       email.archived = true;
