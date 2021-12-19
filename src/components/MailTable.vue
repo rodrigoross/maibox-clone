@@ -1,22 +1,26 @@
 <template>
+  <h1>{{ selecaoDeEmails.emails.size }} emails selecionados</h1>
   <table class="mail-table">
     <tbody>
       <tr
         v-for="email in emailsNaoArquivados"
         :key="email.id"
         :class="['clickable', email.read ? 'read' : '']"
-        @click="abrirEmail(email)"
       >
         <td>
-          <input type="checkbox" name="read" id="read" />
+          <input
+            type="checkbox"
+            @click="selecaoDeEmails.troca(email)"
+            :selected="selecaoDeEmails.emails.has(email)"
+          />
         </td>
-        <td>{{ email.from }}</td>
-        <td>
+        <td @click="abrirEmail(email)">{{ email.from }}</td>
+        <td @click="abrirEmail(email)">
           <p>
             <strong>{{ email.subject }}</strong> - {{ email.body }}
           </p>
         </td>
-        <td class="date">
+        <td class="date" @click="abrirEmail(email)">
           {{ format(new Date(email.sentAt), "d 'de' MMMM", localeOptions) }}
         </td>
         <td>
@@ -32,7 +36,7 @@
 <script>
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import axios from "axios";
 import MailView from "@/components/MailView";
 import ModalView from "@/components/ModalView";
@@ -49,13 +53,28 @@ export default {
     let response = await axios.get("http://localhost:3000/emails");
     const emails = ref(response.data);
 
+    const selecionados = reactive(new Set());
+
+    const selecaoDeEmails = {
+      emails: selecionados,
+      troca(email) {
+        if (selecionados.has(email)) {
+          selecionados.delete(email);
+        } else {
+          selecionados.add(email);
+        }
+        console.log(selecionados);
+      }
+    };
+
     return {
       format,
       localeOptions: {
         locale: ptBR
       },
       emails,
-      emailAberto: ref(null)
+      emailAberto: ref(null),
+      selecaoDeEmails
     };
   },
   computed: {
