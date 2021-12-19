@@ -11,9 +11,21 @@ export const useSelecaoDeEmails = function () {
     }
   }
 
+  const limpa = () => {
+    emails.clear()
+  }
+
+  const adicionaVarios = (novosEmails) => {
+    novosEmails.forEach(email => {
+      emails.add(email)
+    });
+  }
+
   return {
     emails,
-    troca
+    troca,
+    limpa,
+    adicionaVarios
   }
 }
 

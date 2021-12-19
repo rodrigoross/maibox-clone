@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ selecaoDeEmails.emails.size }} emails selecionados</h1>
+  <BulkActionBar :emails="emailsNaoArquivados" />
   <table class="mail-table">
     <tbody>
       <tr
@@ -11,7 +11,7 @@
           <input
             type="checkbox"
             @click="selecaoDeEmails.troca(email)"
-            :selected="selecaoDeEmails.emails.has(email)"
+            :checked="selecaoDeEmails.emails.has(email)"
           />
         </td>
         <td @click="abrirEmail(email)">{{ email.from }}</td>
@@ -38,15 +38,17 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { reactive, ref } from "vue";
 import axios from "axios";
+import useSelecaoDeEmails from '@/composables/use-selecao-emails'
 import MailView from "@/components/MailView";
 import ModalView from "@/components/ModalView";
-import useSelecaoDeEmails from '@/composables/use-selecao-emails'
+import BulkActionBar from "@/components/BulkActionBar";
 
 export default {
   name: "MailTable",
   components: {
     MailView,
-    ModalView
+    ModalView,
+    BulkActionBar
   },
   async setup() {
     // let { data: emails } = await axios.get("http://localhost:3000/emails");
