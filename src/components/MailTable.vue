@@ -36,9 +36,9 @@
 <script>
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import axios from "axios";
-import useSelecaoDeEmails from '@/composables/use-selecao-emails'
+import useSelecaoDeEmails from "@/composables/use-selecao-emails";
 import MailView from "@/components/MailView";
 import ModalView from "@/components/ModalView";
 import BulkActionBar from "@/components/BulkActionBar";
@@ -51,17 +51,15 @@ export default {
     BulkActionBar
   },
   async setup() {
-    // let { data: emails } = await axios.get("http://localhost:3000/emails");
+    let { data: emails } = await axios.get("http://localhost:3000/emails");
     // let emails = response.data; // reduzindo com es6 fica { data: emails}
-    let response = await axios.get("http://localhost:3000/emails");
-    const emails = ref(response.data);
 
     return {
       format,
       localeOptions: {
         locale: ptBR
       },
-      emails,
+      emails: ref(emails),
       emailAberto: ref(null),
       selecaoDeEmails: useSelecaoDeEmails()
     };

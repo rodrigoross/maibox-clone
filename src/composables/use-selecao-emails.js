@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const { reactive } = require("vue");
 
 const emails = reactive(new Set());
@@ -21,11 +23,25 @@ export const useSelecaoDeEmails = function () {
     });
   }
 
+  const paraSelecionados = (fn) => {
+    emails.forEach(email => {
+      fn(email);
+      axios.put(`http://localhost:3000/emails/${email.id}`, email)
+    })
+  }
+
+  const lidos = () => paraSelecionados(e => e.read = true)
+  const naoLidos = () => paraSelecionados(e => e.read = false)
+  const arquivar = () => { paraSelecionados(e => e.archived = true); limpa() }
+
   return {
     emails,
     troca,
     limpa,
-    adicionaVarios
+    adicionaVarios,
+    lidos,
+    naoLidos,
+    arquivar
   }
 }
 

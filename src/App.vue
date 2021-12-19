@@ -1,8 +1,8 @@
 <template>
   <h1>VMail Inbox</h1>
 
-<!-- Com composable foi possivel criar um state não persistente utilizando o Set -->
-  <h1>{{ selecaoDeEmails.emails.size }} emails selecionados</h1>
+  <!-- Com composable foi possivel criar um state não persistente utilizando o Set -->
+  <!-- <h1>{{ selecaoDeEmails.emails.size }} emails selecionados</h1> -->
   <!-- E possivel ignorr o template #default e deixar o conteudo encapsulado dentro do Suspense -->
   <Suspense>
     <template #default>

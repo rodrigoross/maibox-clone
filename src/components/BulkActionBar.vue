@@ -1,11 +1,30 @@
 <template>
-  <div>
-    <input
-      type="checkbox"
-      :checked="todosEmailsSelecionados"
-      :class="[algunsEmailsSelecionados ? 'partial-check' : '']"
-      @click="selecionarTodos"
-    />
+  <div class="bulk-action-bar">
+    <span class="checkbox">
+      <input
+        type="checkbox"
+        :checked="todosEmailsSelecionados"
+        :class="[algunsEmailsSelecionados ? 'partial-check' : '']"
+        @click="selecionarTodos"
+      />
+    </span>
+    <span class="buttons">
+      <button
+        @click="emailsSelecionados.lidos()"
+        :disabled="[...emailsSelecionados.emails].every(e => e.read)"
+      >
+        Marcar como lido
+      </button>
+      <button
+        @click="emailsSelecionados.naoLidos()"
+        :disabled="[...emailsSelecionados.emails].every(e => !e.read)"
+      >
+        Marcar como não lido
+      </button>
+      <button @click="emailsSelecionados.arquivar()" :disabled="numSelecionados === 0">
+        Arquivar
+      </button>
+    </span>
   </div>
 </template>
 <script>
@@ -39,7 +58,9 @@ export default {
     return {
       todosEmailsSelecionados,
       algunsEmailsSelecionados,
-      selecionarTodos
+      selecionarTodos,
+      emailsSelecionados,
+      numSelecionados
     };
   }
 };
